@@ -8,13 +8,13 @@
 import Foundation
 
 struct CoinAPI {
-    static func getCurrencyInfo(completionBlock: @escaping (AssetModel) -> (Void), with id: String?) {
+    static func getCurrencyInfo(completionBlock: @escaping (AssetEndPointModel) -> (Void), with id: String?) {
         if let url = URL(string: "https://api.coincap.io/v2/assets\((id) ?? "")") {
             URLSession.shared.dataTask(with: url) { data, response, error in
                 if let data = data {
                     let jsonDecoder = JSONDecoder()
                     do {
-                        let parsedJSON = try jsonDecoder.decode(AssetModel.self, from: data)
+                        let parsedJSON = try jsonDecoder.decode(AssetEndPointModel.self, from: data)
                         completionBlock(parsedJSON)
                     } catch {
                         print(error)

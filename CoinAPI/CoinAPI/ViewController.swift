@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    private var listOfCurrencies = [CurrencyModel]()
+    private var listOfCurrencies = [AssetModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,13 +17,10 @@ class ViewController: UIViewController {
     }
     
     private func loadCurrencies() {
-//        CoinAPI.getCurrencyInfo(completionBlock: { currency in
-//            print(currency)
-//        }, with: nil)
-        
-        CoinAPI.getRateForCurrency(completionBlock: { rates in
-            print(rates.data)
-        }, with: "/bitcoin")
+        CoinAPI.loadEndpoint(with: .singleAsset)
+        CoinAPI.loadEndpoint(with: .singleRate)
+        CoinAPI.loadEndpoint(with: .assets)
+        CoinAPI.loadEndpoint(with: .rates)
     }
 }
 

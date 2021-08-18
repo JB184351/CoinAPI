@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AssetsEndPointModel: Codable {
+struct AssetsEndPointModel: Codable, CoinProtocol {
     var data: [AssetModel]
     var timestamp: Int
 }

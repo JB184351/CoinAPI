@@ -91,10 +91,10 @@
 		3051BB9126C5514100FC5F39 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				30A84BFB26CB61F9006A8DF7 /* CoinProtocol.swift */,
 				302677B826BCC5B1006F71CD /* AssetModel.swift */,
 				30FD974226C3486B0002724C /* RateModel.swift */,
 				30A84BF726CB1C7C006A8DF7 /* SingleAssetEndPointModel.swift */,
-				30A84BFB26CB61F9006A8DF7 /* CoinProtocol.swift */,
 				30689ED926C2B37400AE8A85 /* AssetsEndPointModel.swift */,
 				30FD974426C34EEE0002724C /* SingleRateEndPointModel.swift */,
 				30A84BF926CB1CF5006A8DF7 /* RatesEndPointModel.swift */,

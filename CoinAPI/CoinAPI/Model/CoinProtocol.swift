@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol CoinProtocol: Codable {
-    var action: () -> Void { get set }
+protocol CoinProtocol {
+    
 }

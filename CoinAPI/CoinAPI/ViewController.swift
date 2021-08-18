@@ -17,10 +17,21 @@ class ViewController: UIViewController {
     }
     
     private func loadCurrencies() {
-        CoinAPI.loadEndpoint(with: .singleAsset)
-        CoinAPI.loadEndpoint(with: .singleRate)
-        CoinAPI.loadEndpoint(with: .assets)
-        CoinAPI.loadEndpoint(with: .rates)
+        CoinAPI.loadAssets { assets in
+            print(assets)
+        }
+
+        CoinAPI.loadRates { rates in
+            print(rates)
+        }
+        
+        CoinAPI.getAsset(completionBlock: { asset in
+            print(asset.data)
+        }, with: "bitcoin")
+        
+        CoinAPI.getRate(completionBlock: { rate in
+            print(rate.data)
+        }, for: "bitcoin")
     }
 }
 

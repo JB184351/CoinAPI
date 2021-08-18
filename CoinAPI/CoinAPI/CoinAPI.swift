@@ -8,98 +8,69 @@
 import Foundation
 
 struct CoinAPI {
-    private static func getAsset(completionBlock: @escaping (SingleAssetEndPointModel) -> (Void), with id: String?) {
-        if let url = URL(string: "https://api.coincap.io/v2/assets\((id) ?? "")") {
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                if let data = data {
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let parsedJSON = try jsonDecoder.decode(SingleAssetEndPointModel.self, from: data)
-                        completionBlock(parsedJSON)
-                    } catch {
-                        print(error)
-                    }
-                }
-            }.resume()
+    public static func getAsset(completionBlock: @escaping (SingleAssetEndPointModel) -> (Void), with id: String?) {
+        load(with: .singleAsset, with: "/bitcoin") { singleAssetModel in
+            completionBlock(singleAssetModel as! SingleAssetEndPointModel)
         }
     }
     
-    private static func getRate(completionBlock: @escaping (SingleRateEndPointModel) -> (Void), for id: String?) {
-        if let url = URL(string: "https://api.coincap.io/v2/rates\((id) ?? "")") {
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                if let data = data {
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let parsedJSON = try jsonDecoder.decode(SingleRateEndPointModel.self, from: data)
-                        completionBlock(parsedJSON)
-                    } catch {
-                        print(error)
-                    }
-                }
-            }.resume()
+    public static func getRate(completionBlock: @escaping (SingleRateEndPointModel) -> (Void), for id: String?) {
+        load(with: .singleRate, with: "/bitcoin") { singleRateModel in
+            completionBlock(singleRateModel as! SingleRateEndPointModel)
         }
     }
     
-    private static func loadAssets(completionBlock: @escaping (AssetsEndPointModel) -> (Void)) {
-        if let url = URL(string: "https://api.coincap.io/v2/assets") {
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                if let data = data {
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let parsedJSON = try jsonDecoder.decode(AssetsEndPointModel.self, from: data)
-                        completionBlock(parsedJSON)
-                    } catch {
-                        print(error)
-                    }
-                }
-            }.resume()
+    public static func loadAssets(completionBlock: @escaping (AssetsEndPointModel) -> (Void)) {
+        load(with: .assets, with: nil) { assetsModel in
+            completionBlock(assetsModel as! AssetsEndPointModel)
         }
     }
     
-    private static func loadRates(completionBlock: @escaping (RatesEndPointModel) -> (Void)) {
-        if let url = URL(string: "https://api.coincap.io/v2/rates") {
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                if let data = data {
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let parsedJSON = try jsonDecoder.decode(RatesEndPointModel.self, from: data)
-                        completionBlock(parsedJSON)
-                    } catch {
-                        print(error)
-                    }
-                }
-            }.resume()
+    public static func loadRates(completionBlock: @escaping (RatesEndPointModel) -> (Void)) {
+        load(with: .rates, with: nil) { ratesModel in
+            completionBlock(ratesModel as! RatesEndPointModel)
         }
     }
     
-    public static func loadEndpoint(with endpoint: EndPoint) {
-        switch endpoint {
-        case .singleAsset:
-            getAsset(completionBlock: { asset in
-                print("This is the asset endpint for bitcoin \(asset.data)")
-            }, with: "/bitcoin")
-        case .singleRate:
-            getRate(completionBlock: { rate in
-                print("This is the rate endpint for bitcoin \(rate.data)")
-            }, for: "/bitcoin")
+    private static func load(with endPoint: EndPoint, with id: String?, completionBlock: @escaping (CoinProtocol) -> (Void)) {
+        var baseURL = URL(string: "https://api.coincap.io/v2/")
+        
+        switch endPoint {
         case .assets:
-            loadAssets { assets in
-                print("These are the assets \(assets)")
-            }
+            baseURL?.appendPathComponent("assets")
         case .rates:
-            loadRates { rates in
-                print("These are the currency rates \(rates)")
-            }
+            baseURL?.appendPathComponent("rates")
+        case .singleAsset:
+            baseURL?.appendPathComponent("assets/\(id ?? "")")
+        case .singleRate:
+            baseURL?.appendPathComponent("rates/\(id ?? "")")
+        }
+        
+        if let url = baseURL {
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let data = data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        switch endPoint {
+                        case .assets:
+                            let parsedJSON = try jsonDecoder.decode(AssetsEndPointModel.self, from: data)
+                            completionBlock(parsedJSON)
+                        case .rates:
+                            let parsedJSON = try jsonDecoder.decode(RatesEndPointModel.self, from: data)
+                            completionBlock(parsedJSON)
+                        case .singleAsset:
+                            let parsedJSON = try jsonDecoder.decode(SingleAssetEndPointModel.self, from: data)
+                            completionBlock(parsedJSON)
+                        case .singleRate:
+                            let parsedJSON = try jsonDecoder.decode(SingleRateEndPointModel.self, from: data)
+                            completionBlock(parsedJSON)
+                        }
+                    } catch {
+                        print(error)
+                    }
+                }
+            }.resume()
         }
     }
-    
-    
-    
-    //TODO: Make Private Static Endpoint with the EndPoint Model as parameter using an EndPoint Enum
-    //Tip:
-    
-    
-    
-    
 }
 

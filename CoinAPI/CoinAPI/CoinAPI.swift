@@ -8,13 +8,13 @@
 import Foundation
 
 struct CoinAPI {
-    public static func getAsset(completionBlock: @escaping (SingleAssetEndPointModel) -> (Void), with id: String?) {
+    public static func getAsset(with id: String?, completionBlock: @escaping (SingleAssetEndPointModel) -> (Void)) {
         load(with: .singleAsset, with: "/bitcoin") { singleAssetModel in
             completionBlock(singleAssetModel as! SingleAssetEndPointModel)
         }
     }
     
-    public static func getRate(completionBlock: @escaping (SingleRateEndPointModel) -> (Void), for id: String?) {
+    public static func getRate(for id: String?, completionBlock: @escaping (SingleRateEndPointModel) -> (Void)) {
         load(with: .singleRate, with: "/bitcoin") { singleRateModel in
             completionBlock(singleRateModel as! SingleRateEndPointModel)
         }

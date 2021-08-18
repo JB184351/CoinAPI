@@ -25,13 +25,13 @@ class ViewController: UIViewController {
             print(rates)
         }
         
-        CoinAPI.getAsset(completionBlock: { asset in
+        CoinAPI.getAsset(with: "bitcoin", completionBlock: { asset in
             print(asset.data)
-        }, with: "bitcoin")
+        })
         
-        CoinAPI.getRate(completionBlock: { rate in
+        CoinAPI.getRate(for: "bitcoin", completionBlock: { rate in
             print(rate.data)
-        }, for: "bitcoin")
+        })
     }
 }
 

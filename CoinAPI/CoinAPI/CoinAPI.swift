@@ -9,30 +9,30 @@ import Foundation
 
 struct CoinAPI {
     public static func getAsset(with id: String?, completionBlock: @escaping (SingleAssetEndPointModel) -> (Void)) {
-        load(with: .singleAsset, with: "/bitcoin") { singleAssetModel in
+        load(with: .singleAsset, with: id) { singleAssetModel in
             completionBlock(singleAssetModel as! SingleAssetEndPointModel)
         }
     }
     
     public static func getRate(for id: String?, completionBlock: @escaping (SingleRateEndPointModel) -> (Void)) {
-        load(with: .singleRate, with: "/bitcoin") { singleRateModel in
+        load(with: .singleRate, with: id) { singleRateModel in
             completionBlock(singleRateModel as! SingleRateEndPointModel)
         }
     }
     
     public static func loadAssets(completionBlock: @escaping (AssetsEndPointModel) -> (Void)) {
-        load(with: .assets, with: nil) { assetsModel in
+        load(with: .assets) { assetsModel in
             completionBlock(assetsModel as! AssetsEndPointModel)
         }
     }
     
     public static func loadRates(completionBlock: @escaping (RatesEndPointModel) -> (Void)) {
-        load(with: .rates, with: nil) { ratesModel in
+        load(with: .rates) { ratesModel in
             completionBlock(ratesModel as! RatesEndPointModel)
         }
     }
     
-    private static func load(with endPoint: EndPoint, with id: String?, completionBlock: @escaping (CoinProtocol) -> (Void)) {
+    private static func load(with endPoint: EndPoint, with id: String? = nil, completionBlock: @escaping (CoinProtocol) -> (Void)) {
         var baseURL = URL(string: "https://api.coincap.io/v2/")
         
         switch endPoint {
